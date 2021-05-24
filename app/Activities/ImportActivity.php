@@ -11,6 +11,7 @@ class ImportActivity {
         $this->importParents();
         $this->importKids();
 
+        \App\Models\ExtractedHistory::truncate();
     }
 
 

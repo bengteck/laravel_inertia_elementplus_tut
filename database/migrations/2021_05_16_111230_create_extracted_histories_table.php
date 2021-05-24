@@ -17,11 +17,11 @@ class CreateExtractedHistoriesTable extends Migration
             $table->id();
             $table->boolean('done')->default(0);
             $table->string('parent');
-            $table->string('kid_id');
+            $table->bigInteger('kid_id');
             $table->string('kid_name');
             $table->string('level');
-            $table->string('date');
-            $table->string('subject_id');
+            $table->dateTime('date');
+            $table->bigInteger('subject_id');
             $table->string('subject');
             $table->string('type')->nullable();
             $table->string('unit')->nullable();
