@@ -1,5 +1,6 @@
 <?php
 
+use App\Activities\ImportActivity;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,3 +20,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('process', function(ImportActivity $activity){
+   
+    $rows = $activity->importFromHistory();
+    return view('listing', compact('rows'));
+});

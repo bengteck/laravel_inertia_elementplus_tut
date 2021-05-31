@@ -5,13 +5,14 @@ namespace App\Activities;
 class ImportActivity {
     public function importFromHistory() {
         // extract kids
-        $this->importProgress();
+        $progress = $this->importProgress();
         $this->importLevels();
         $this->importSubjects();
         $this->importParents();
         $this->importKids();
 
         \App\Models\ExtractedHistory::truncate();
+        return $progress;
     }
 
 
@@ -19,13 +20,11 @@ class ImportActivity {
         $already_exists = \DB::table('extracted_histories')
             ->select('extracted_histories.id')
             ->join('progress', function($join) {
-                $join
-                ->on('extracted_histories.kid_id','=','progress.kid_id')
-                ->where('extracted_histories.subject_id', 'progress.subject_id')
-                ->where('extracted_histories.date', 'progress.date');
+                $join->on('extracted_histories.kid_id', 'progress.kid_id');
+                $join->on('extracted_histories.subject_id', 'progress.subject_id');
+                $join->on('extracted_histories.date', 'progress.date');
             });
 
-            // return $already_exists->get();
         $idsThatMatters = \App\Models\ExtractedHistory::selectRaw('max(id) as id')
             ->whereNotIn('id', $already_exists )
             ->groupBy( 'kid_id', 'subject_id', 'date' );
@@ -47,8 +46,10 @@ class ImportActivity {
             )
             ->whereIn('id', $idsThatMatters )
             ->get()->toArray();
-
+        
         if( count($works) > 0) $this->setRecords(new \App\Models\Progress(), $works);
+
+        return $works;
     }
 
     public function importLevels() {
