@@ -11,8 +11,12 @@
     <style>
         td {
             white-space: nowrap;
+            padding: .2em .3em;
         }
     </style>
+    <pre>
+        last date by account <a href="/query?type=lastdate&title=Last Date By Account">GO</a>
+    </pre>
     @php
         $keys = ['nothing'];
         if ( $rows && count($rows) > 0 ) {
@@ -25,6 +29,9 @@
             }
         }
     @endphp
+    @if($title)
+    <h1>{{ $title }}</h1>
+    @endif
     <h3>Total result {{ count($rows) }}</h3>
     <table>
         <tr>

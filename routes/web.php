@@ -14,7 +14,19 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/query', function(Request $request){
+    $query = $request->get('type');
+    $title = $request->get('title');
+    $rows = \App\Models\Progress::select([
+        'parent',
+        \DB::raw('max(date) as "last date"'),
+        \DB::raw('now() as "today"'),
+        ])
+        ->groupBy('parent')
+        ->get();
+    // $rows = [];
+    return view('query', compact('rows','title'));
+});
 Route::get('/', function () {
     Debugbar::info('Hello');
     \App\Models\User::whereIn('id',\App\Models\User::select('id')->where('name','like','Mr%'))->get();
@@ -43,6 +55,7 @@ Route::get('search', function(Request $request){
             ->where('parent',$selection['parent'])
             ->whereBetween('date',[$selection['from_date'], $selection['to_date']])
             ->orderBy('date')
+            ->orderBy('kid_name')
             ->orderBy('subject')
             ->get();
     }

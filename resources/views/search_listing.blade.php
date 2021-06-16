@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
+    @include('section.menu')
     <style>
         td {
             white-space: nowrap;
